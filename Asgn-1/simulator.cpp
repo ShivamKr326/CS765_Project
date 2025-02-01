@@ -81,7 +81,7 @@ void createRandomConnections(){
         while (peers[i]->adjList.size() < degreeDist(gen)) {
             int peer = rand() % n; // Random peer
             if (peer != i && peers[i]->adjList.size() < 6 && peers[peer]->adjList.size() < 6) {
-                Peer::add_edge(i,peer); // here have to add the adj node, its parity for fast and pij.
+                Peer::add_edge(peers[i],peers[peer]); // here have to add the adj node, its parity for fast and pij.
             }
         }
     }

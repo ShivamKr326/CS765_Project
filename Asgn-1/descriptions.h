@@ -60,6 +60,23 @@ class Peer{
     vector<pair<Block*, ld>> block_arrival_time; // store arrival time for each block
 
     Peer();
+    ~Peer();
+    static void add_edge(Peer*, Peer*);
+    void add_block(Block*, bool);
+    void schedule_next_txn(Simulator*);
+    void schedule_next_blk(Simulator*);
+    Transaction* generate_txn(Simulator*);
+    Block* generate_blk(Simulator*);
+    bool validate_txn(Transaction*, vector<int>&);
+    bool validate_block(Block*,vector<int>&);
+    void forward_txn(Simulator*, Peer*, Transaction*);
+    void receive_txn(Simulator*, Peer*, Transaction*);
+    void forward_block(Simulator*, Peer*, Block*);
+    void receive_block(Simulator*, Peer*, Block*);
+    void broadcast_mined_block(Simulator*);
+    void export_blockchain(ostream&);
+    void export_arrival_times(ostream&);
+    void export_stats(Simulator*, ostream&);
 };
 
 class Transaction{
