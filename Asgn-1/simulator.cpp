@@ -9,7 +9,7 @@ Simulator::Simulator(int n_,ld z0_,ld z1_,ld Ttx_){
     lowPeers = (int)z1_*n;
     Ttx = Ttx_;
     current_timestamp = START_TIME;
-    has_simulation_ended = false;
+    simulation_ended = false;
 
     Transaction::counter = 0;
     Block::max_size = MAX_BLOCK_SIZE;  // 1000 KB
@@ -131,7 +131,7 @@ void Simulator::construct_network(){
 }
 
 /* Event generator */
-void Simulator::event_init(){
+void Simulator::events_init(){
     for(Peer* peer: peers){
         peer->schedule_next_txn(this);
         peer->schedul_next_block(this);
@@ -154,14 +154,94 @@ void Simulator::delete_event(Event* event){
     return;
 }
 
-// void Simulation::reset(const fs::path& dir_path) {
-//     fs::remove_all(dir_path);
-//     fs::create_directories(dir_path);
-// }
+void Simulator::reset(const fs::path& dir_path) {
+    fs::remove_all(dir_path);
+    fs::create_directories(dir_path);
+}
 
-void Simulator::run(int timeout,int max_txns,int max_blocks){
+void Simulator::run(int timeout_,int max_txns_,int max_blocks_){
     get_peers();
-
+    reset("output");
     
+    construct_network();
+    events_init();
+    simulation_ended = false;
 
+    int max_txns = max_txns_ <= 0 ? INT_MAX : max_txns_;
+    int max_blocks = max_blocks_ <= 0 ? INT_MAX : max_blocks_;
+    ld timeout = timeout_ <= 0 ? DBL_MAX : timeout_;
+
+    while (!events.empty()) {
+        current_event = *events.begin();
+        current_timestamp = current_event->timestamp;
+
+        if (current_event->timestamp > end_time)
+            break;
+        if (Transaction::counter >= max_txns)
+            break;
+        if (Block::counter >= max_blocks)
+            break;
+
+        current_event->run(this);
+
+        delete_event(current_event);
+    }
+
+    reset("output/termination_blockchains");
+
+    for (Peer* p : peers) {
+        string filename = "output/termination_blockchains/" + p->get_name() + ".txt";
+        ofstream outfile(filename);
+        p->export_blockchain(outfile);
+        outfile.close();
+    }
+
+    complete_non_generate_events();
+
+    reset("output/block_arrivals");
+    for (Peer* p : peers) {
+        string filename = "output/block_arrivals/" + p->get_name() + ".txt";
+        ofstream outfile(filename);
+        p->export_arrival_times(outfile);
+        outfile.close();
+    }
+
+    reset("output/peer_stats");
+    for (Peer* p : peers) {
+        string filename = "output/peer_stats/" + p->get_name() + ".txt";
+        ofstream outfile(filename);
+        p->export_stats(this, outfile);
+        outfile.close();
+    }
+
+    cout << "Total Transactions: " << (Transaction::counter) << '\n';
+    cout << "Total Blocks: " << (Block::counter) << '\n';
+    return;
+}
+
+void Simulator::complete_non_generate_events() {
+    simulation_ended = true;
+
+    for (Peer* p : peers) {
+        p->next_mining_event = NULL;
+        p->next_mining_block = NULL;
+    }
+
+    while (!events.empty()) {
+        current_event = *events.begin();
+        current_timestamp = current_event->timestamp;
+
+        if (!current_event->is_generate_type_event)
+            current_event->run(this);
+
+        delete_event(current_event);
+    }
+
+    reset("output/final_blockchains");
+    for (Peer* p : peers) {
+        string filename = "output/final_blockchains/" + p->get_name() + ".txt";
+        ofstream outfile(filename);
+        p->export_blockchain(outfile);
+        outfile.close();
+    }
 }
