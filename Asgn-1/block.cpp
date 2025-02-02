@@ -41,4 +41,9 @@ string Block::get_name(){
     return "BlkID:"+to_string(id+1);
 }
 
-/* could use a clone function if req */
+Block* clone(){
+    Block* cloned = new Block(*this);
+    cloned->reset_parent();
+    cloned->next.clear();
+    return cloned;
+}

@@ -40,9 +40,9 @@ void Simulator::get_peers(){
     vector<int> participants(n);
     for(int i=0;i<n;i++) participants[i]=i;
 
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(participants.begin(),participants.end(),g);
+    // random_device rd;
+    // mt19937 g(rd());
+    shuffle(participants.begin(),participants.end(),gen);
 
     for(int i=0;i<slowPeers;i++){
         peers[participants[i]]->isfast = false;
@@ -51,7 +51,7 @@ void Simulator::get_peers(){
         peers[participants[i]]->isfast = true;
     }
 
-    shuffle(participants.begin(),participants.end(),g);
+    shuffle(participants.begin(),participants.end(),gen);
 
     for(int i=0;i<lowPeers;i++){
         peers[participants[i]]->ishigh = false;
@@ -73,8 +73,8 @@ void createRandomConnections(){
         peers[i]->adjList.clear(); //adjList is an unordered_set of pair of pair of int(neighbour),bool(whether neighbour is fast)
         // and pij for the edge between them
     }
-    random_device rd;
-    mt19937 gen(rd());
+    // random_device rd;
+    // mt19937 gen(rd());
     uniform_int_distribution<int> degreeDist(3, 6); // Random degree between 3 and 6
 
     for (int i = 0; i < n; i++) {
