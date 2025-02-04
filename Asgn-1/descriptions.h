@@ -143,11 +143,12 @@ class Blockchain{
 
 class Link{
     public:
-        int cij,pij; //cij is in mb
+        int cij;
+        ld pij; // rho ij is taken from a uniform distribution 0.01 sec to 0.5 sec
         exponential_distribution<ld> dij;
         Peer* peer;
-        Link(Peer*, bool, int);
-        int delay(int);
+        Link(Peer*, bool, ld); // rho argument should be ld
+        ld delay(int); // timestamp should be ld
 };
 
 class Event{
