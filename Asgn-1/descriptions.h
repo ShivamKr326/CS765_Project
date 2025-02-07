@@ -19,6 +19,12 @@ class Simulator;
 class Blockchain;
 class Link;
 class Event;
+class GenTransaction;
+class ForwardTransaction;
+class RecieveTransaction;
+class BroadcastBlock;
+class ForwardBlock;
+class RecieveBlock;
 
 class Block{
     public:
