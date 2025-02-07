@@ -10,9 +10,6 @@ Event::Event(ld timestamp_){
 bool Event::operator<(const Event& other){
     if(timestamp!=other.timestamp){
         return timestamp < other.timestamp;
-    }else return this < &other;
-}
-
-void Event::run(Simulator* simulator){
-    assert(false);
+    }
+    else return this < &other;
 }
