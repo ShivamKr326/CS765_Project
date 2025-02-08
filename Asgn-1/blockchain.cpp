@@ -27,3 +27,6 @@ static Block* Blockchain::backward(Block* blk,vector<int>& balances, vector<Tran
     balances[blk->miner->id]-=MINING_FEE;
     return blk->parent;
 }
+
+/// please work
+// do please
