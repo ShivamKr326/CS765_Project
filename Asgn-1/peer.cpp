@@ -55,7 +55,7 @@ void Peer::schedule_next_txn(Simulator* simulator){
 
 void Peer::schedule_next_blk(Simulator* simulator){
     next_mining_block = generate_blk(simulator);
-    ld mining_time = ;
+    ld mining_time = ; // have to change
     Event* ev = new Broadcast_mined_blk(mining_time, this);
     simulator->add_event(ev);
     return;

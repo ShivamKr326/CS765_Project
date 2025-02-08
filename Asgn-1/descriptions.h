@@ -148,7 +148,7 @@ class Simulator{
         void add_event(Event*);
         void delete_event(Event*);
         void reset(const fs::path& dir_path);
-        void run(int, int, int);
+        void run(int);
         void complete_non_generate_events();
 };
 

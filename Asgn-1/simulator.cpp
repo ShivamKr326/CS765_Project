@@ -143,7 +143,7 @@ void Simulator::events_init(){
 }
 
 void Simulator::add_event(Event* event){
-    event_timestamp += current_timestamp;
+    event->timestamp += current_timestamp;
     events.insert(event);
     return;
 }
@@ -162,27 +162,20 @@ void Simulator::reset(const fs::path& dir_path) {
     fs::create_directories(dir_path);
 }
 
-void Simulator::run(int timeout_,int max_txns_,int max_blocks_){
+void Simulator::run(int timeout_){
     get_peers();
     reset("output");
     
     construct_network();
     events_init();
     simulation_ended = false;
-
-    int max_txns = max_txns_ <= 0 ? INT_MAX : max_txns_;
-    int max_blocks = max_blocks_ <= 0 ? INT_MAX : max_blocks_;
     ld timeout = timeout_ <= 0 ? DBL_MAX : timeout_;
 
     while (!events.empty()) {
         current_event = *events.begin();
         current_timestamp = current_event->timestamp;
 
-        if (current_event->timestamp > end_time)
-            break;
-        if (Transaction::counter >= max_txns)
-            break;
-        if (Block::counter >= max_blocks)
+        if (current_event->timestamp > timeout)
             break;
 
         current_event->run(this);

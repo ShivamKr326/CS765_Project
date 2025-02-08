@@ -16,10 +16,10 @@ int main(){
     cin>>z1;
     cout<<"Enter the mean time for the expo dist for txn generation: "<<endl;
     cin>>Ttx;
-    int timeout,max_txns,max_blocks;
-    cin>>timeout>>max_txns>>max_blocks;
+    int timeout;
+    cin>>timeout;
     Simulator simulator(n,z0,z1,Ttx);
-    simulator.run(timeout,max_txns,max_blocks);
+    simulator.run(timeout);
 
     return 0;
 }
