@@ -2,6 +2,9 @@
 
 using namespace std;
 
+random_device rd;
+mt19937 gen(rd());
+
 /* Constructor */
 Simulator::Simulator(int n_,ld z0_,ld z1_,ld Ttx_){
     n = n_;

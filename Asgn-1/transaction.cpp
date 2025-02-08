@@ -13,7 +13,7 @@ Transaction::Transaction(ld timestamp_, Peer* sender_, Peer* receiver_, ld coins
     timestamp = timestamp_;
 }
 
-string Transation::get_name(){
+string Transaction::get_name(){
     return "TxnID:"+to_string(id+1);
 }
 

@@ -41,7 +41,7 @@ string Block::get_name(){
     return "BlkID:"+to_string(id+1);
 }
 
-Block* clone(){
+Block* Block::clone(){
     Block* cloned = new Block(*this);
     cloned->reset_parent();
     cloned->next.clear();
